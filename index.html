@@ -4,81 +4,92 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>بسکت‌آمار NBA | امتیازآورهای روز، نتایج و جدول</title>
-<meta name="description" content="آمار روزانه NBA: برترین امتیازآورها، نتایج و آمار تیمی بازی‌ها و جدول رده‌بندی دو کنفرانس.">
+<meta name="description" content="آمار روزانه NBA: برترین امتیازآورها، باکس‌اسکور بازی‌ها، رده‌بندی و برترین‌های فصل.">
 <meta property="og:title" content="بسکت‌آمار NBA"><meta property="og:description" content="آمار روزانه NBA">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏀</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e6ebf2;--tx:#2d3748;--mu:#6b778a;--ac:#f26b21;--lt:#fff;--dk:#bcc4d2;--ok:#2f9e6b;--no:#d9534f;--r:22px}
-[data-t=dark]{--bg:#22262e;--tx:#e8ebf1;--mu:#9aa4b5;--lt:#2e333d;--dk:#161a20}
+:root{--tx:#f2f5ff;--mu:#aab3d0;--ac:#ff8a3d;--base:#0a0f1f;--card:linear-gradient(135deg,rgba(255,255,255,.17),rgba(255,255,255,.05));--shell:rgba(255,255,255,.06);--gb:rgba(255,255,255,.22);--sh:rgba(0,0,0,.4);--ok:#4ade80;--no:#ff6b6b;--r:22px}
+[data-t=light]{--tx:#1c2340;--mu:#566083;--base:#eef1ff;--card:linear-gradient(135deg,rgba(255,255,255,.85),rgba(255,255,255,.4));--shell:rgba(255,255,255,.35);--gb:rgba(255,255,255,.9);--sh:rgba(60,70,120,.22);--ok:#16a34a;--no:#dc2626}
 *{box-sizing:border-box;margin:0}
-body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--tx);line-height:1.7;min-height:100vh;transition:background .3s}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--base);color:var(--tx);line-height:1.7;min-height:100vh;overflow-x:hidden}
 button,input{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--ac);outline-offset:3px}
-.wrap{max-width:1120px;margin:auto;padding:16px}
-.raise{background:var(--bg);border-radius:var(--r);box-shadow:6px 6px 14px var(--dk),-6px -6px 14px var(--lt)}
-.inset{background:var(--bg);border-radius:14px;box-shadow:inset 5px 5px 10px var(--dk),inset -5px -5px 10px var(--lt)}
-.btn{border:0;cursor:pointer;background:var(--bg);border-radius:14px;padding:8px 16px;box-shadow:5px 5px 10px var(--dk),-5px -5px 10px var(--lt);transition:.15s}
-.btn:active,.btn.on{box-shadow:inset 4px 4px 8px var(--dk),inset -4px -4px 8px var(--lt);color:var(--ac);font-weight:800}
-.btn:disabled{opacity:.4;cursor:default}
-header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0}
+.orb{position:fixed;width:46vmax;height:46vmax;border-radius:50%;filter:blur(70px);opacity:.6;z-index:0;pointer-events:none;animation:fl 22s ease-in-out infinite alternate}
+.o1{background:#ff7a18;top:-14vmax;right:-10vmax}.o2{background:#7b5cff;bottom:-16vmax;left:-12vmax;animation-delay:-8s}.o3{background:#00c2ff;top:30%;left:35%;width:30vmax;height:30vmax;opacity:.35;animation-delay:-14s}
+[data-t=light] .orb{opacity:.55}
+@keyframes fl{to{transform:translate(6vmax,5vmax) scale(1.15)}}
+.shell{position:relative;z-index:1;max-width:1140px;margin:16px auto;border-radius:32px;background:var(--shell);border:1px solid var(--gb);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%);box-shadow:0 30px 80px var(--sh),inset 0 1px 0 rgba(255,255,255,.35)}
+.wrap{padding:16px 22px}
+.raise,.inset,.btn,input[type=date]{background:var(--card);border:1px solid var(--gb);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.raise{border-radius:var(--r);box-shadow:0 8px 24px var(--sh),inset 0 1px 0 rgba(255,255,255,.3)}
+.inset{border-radius:14px}
+header,.ov,.md{-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%)}
+header{position:sticky;top:0;z-index:5;border-radius:32px 32px 0 0;border-bottom:1px solid var(--gb);background:var(--shell)}
+.btn{cursor:pointer;border-radius:14px;padding:7px 16px;transition:.15s}
+.btn:hover{border-color:var(--ac)}
+.btn.on{background:linear-gradient(135deg,#ff8a3d,#ff5e62);color:#fff;font-weight:800;border-color:transparent}
+.btn:disabled{opacity:.4}
 .top{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:12px;font-weight:900;font-size:1.5rem}
-.ball{--s:56px;width:var(--s);height:var(--s);border-radius:50%;position:relative;overflow:hidden;flex:none;background:radial-gradient(circle at 30% 28%,#ffa45e,#f26b21 55%,#b44a10);box-shadow:inset -6px -8px 14px rgba(0,0,0,.35),8px 12px 20px var(--dk),-6px -6px 14px var(--lt)}
+.logo{font-weight:900;font-size:1.5rem}
+.ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input[type=date]{padding:7px 12px;border-radius:14px;color-scheme:dark}
+[data-t=light] input[type=date]{color-scheme:light}
+nav.tabs{display:flex;gap:10px;margin-top:12px;overflow-x:auto;padding-bottom:4px}
+nav.tabs .btn{white-space:nowrap}
+.date{color:var(--mu);margin:6px 4px 18px}
+.ball{--s:84px;width:var(--s);height:var(--s);border-radius:50%;position:relative;overflow:hidden;flex:none;background:radial-gradient(circle at 30% 28%,#ffb070,#ff7a18 55%,#b44a10);box-shadow:inset -6px -8px 14px rgba(0,0,0,.35),0 10px 24px var(--sh)}
 .ball::before,.ball::after{content:"";position:absolute;background:rgba(40,18,6,.6)}
 .ball::before{left:50%;top:0;width:3px;height:100%;margin-left:-1.5px}
 .ball::after{top:50%;left:0;height:3px;width:100%;margin-top:-1.5px}
 .ball i::before,.ball i::after{content:"";position:absolute;top:6%;width:70%;height:88%;border-radius:50%;border:3px solid rgba(40,18,6,.6)}
 .ball i::before{left:-48%}.ball i::after{right:-48%}
-.ball.big{--s:84px}
-@keyframes spin{to{transform:rotate(25deg) translateY(-6px)}}
-.ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-input[type=date],input[type=search]{border:0;padding:8px 12px;border-radius:14px;background:var(--bg);box-shadow:inset 4px 4px 8px var(--dk),inset -4px -4px 8px var(--lt)}
-input[type=search]{width:100%}
-nav.tabs{display:flex;gap:12px;margin-top:14px;overflow-x:auto;padding:8px 4px 14px}
-nav.tabs .btn{white-space:nowrap}
-.date{color:var(--mu);margin:8px 4px 18px}
-h2{font-size:1.25rem;font-weight:800;margin:26px 4px 14px}
 .hero{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;padding:24px}
 .hero h3{font-size:clamp(1.3rem,4vw,2.1rem);font-weight:900;line-height:1.3}
 .mu{color:var(--mu)}
-.big-n{font-size:clamp(3rem,10vw,5.5rem);font-weight:900;color:var(--ac);line-height:1;text-align:center;text-shadow:3px 3px 6px var(--dk),-3px -3px 6px var(--lt)}
-.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.chip{padding:4px 14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:28px}
-[data-tilt]{transition:transform .18s ease-out;will-change:transform}
-.game{padding:18px}
-.row{display:flex;justify-content:space-between;align-items:center;padding:6px 4px}
+.big-n{font-size:clamp(3rem,10vw,5.5rem);font-weight:900;color:var(--ac);line-height:1;text-align:center;text-shadow:0 0 28px rgba(255,138,61,.55)}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;padding:0 10px;margin-right:6px;border-radius:20px;background:linear-gradient(135deg,#ff8a3d,#ff5e62);color:#fff;vertical-align:middle}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+.game{padding:16px 18px;cursor:pointer;transition:transform .2s,border-color .2s}
+.game:hover{transform:translateY(-4px);border-color:var(--ac)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:4px}
 .row b{font-size:1.4rem}.row.w{font-weight:800;color:var(--ac)}
-.lg{width:42px;height:42px;border-radius:50%;display:inline-grid;place-items:center;margin-left:10px;vertical-align:middle;font-size:.7rem;font-weight:800;overflow:hidden;flex:none;box-shadow:inset 3px 3px 6px var(--dk),inset -3px -3px 6px var(--lt)}
+.lg{width:40px;height:40px;border-radius:50%;display:inline-grid;place-items:center;margin-left:10px;vertical-align:middle;background:rgba(255,255,255,.92);flex:none}
 .lg img{width:28px;height:28px;object-fit:contain}
-.st{font-size:.8rem;margin-bottom:6px;color:var(--mu)}
+.st{font-size:.8rem;margin-bottom:4px;color:var(--mu)}
 .live{color:var(--no);font-weight:800}.live::before{content:"● "}
 table{width:100%;border-collapse:collapse;font-size:.92rem}
 th{color:var(--mu);font-weight:600}
 th,td{padding:7px 6px;text-align:center;white-space:nowrap}
-td:nth-child(2),th:nth-child(2){text-align:right}
-.mini{margin-top:12px;padding:8px}
-.mini td:first-child{color:var(--mu);text-align:right}
-.best{margin-top:10px;font-size:.85rem;color:var(--mu)}
-.list{padding:10px 18px}
-.pl{display:grid;grid-template-columns:34px 1fr 60px;gap:12px;align-items:center;padding:12px 0}
-.track{height:14px;border-radius:8px;margin-top:4px;overflow:hidden}
-.fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#ff9a52,var(--ac));box-shadow:2px 2px 5px var(--dk)}
+.tb td:nth-child(2),.tb th:nth-child(2),.bxt td:first-child,.bxt th:first-child{text-align:right}
+.mini{margin:6px 0 4px;padding:8px}.mini td:first-child{color:var(--mu);text-align:right}
+tr.cut td{border-bottom:2px solid var(--ac)}tr.cut2 td{border-bottom:2px dashed var(--mu)}
+.best{margin-top:8px;font-size:.85rem;color:var(--mu)}
+.list{padding:8px 18px}
+.pl{display:grid;grid-template-columns:30px 1fr 64px;gap:12px;align-items:center;padding:12px 0}
+.track{height:6px;border-radius:8px;margin-top:6px;overflow:hidden;background:rgba(255,255,255,.14)}
+.fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#ff8a3d,#ff5e62)}
 .rk{font-weight:900;color:var(--mu);text-align:center}
 .sc{font-weight:900;font-size:1.3rem;text-align:left}
 .scroll{overflow-x:auto;padding:14px}
-.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,500px),1fr));gap:24px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:22px}
 .empty{padding:30px;text-align:center;color:var(--mu)}
-.seg{display:flex;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.seg{display:flex;gap:10px;margin:26px 0 12px;flex-wrap:wrap}
+.ov{position:fixed;inset:0;background:rgba(5,8,20,.5);z-index:20;display:grid;place-items:center;padding:16px}
+.md{max-width:780px;width:100%;max-height:88vh;overflow:auto;padding:20px;border-radius:var(--r);box-shadow:0 20px 60px var(--sh);background:var(--shell);border:1px solid var(--gb)}
+[data-t=dark] .md{background:rgba(20,26,48,.75)}[data-t=light] .md{background:rgba(255,255,255,.8)}
+.md h3{display:flex;align-items:center;justify-content:space-between;margin:14px 0 6px}
+.md .scroll{padding:0}
 bdi{unicode-bidi:isolate}
-footer{text-align:center;color:var(--mu);font-size:.8rem;padding:30px 0 40px}
-@media(max-width:640px){.hero{grid-template-columns:1fr;text-align:center}.hero .ball{margin:auto}.chips{justify-content:center}.wrap{padding:12px}}
-@media(prefers-reduced-motion:reduce){.ball.big{animation:none}*{transition:none!important}}
+footer{text-align:center;color:var(--mu);font-size:.8rem;padding:6px 0 26px}
+@media(max-width:640px){.shell{margin:8px;border-radius:24px}header{border-radius:24px 24px 0 0}.hero{grid-template-columns:1fr;text-align:center}.hero .ball{margin:auto}.wrap{padding:12px 14px}}
+@media(prefers-reduced-motion:reduce){.orb{animation:none}*{transition:none!important}}
 </style>
 </head>
 <body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div class="shell">
 <header><div class="wrap">
  <div class="top">
   <div class="logo">بسکت‌آمار NBA</div>
@@ -94,74 +105,152 @@ footer{text-align:center;color:var(--mu);font-size:.8rem;padding:30px 0 40px}
   <button class="btn on" data-tab="day">برترین‌های روز</button>
   <button class="btn" data-tab="games">بازی‌ها</button>
   <button class="btn" data-tab="table">جدول رده‌بندی</button>
+  <button class="btn" data-tab="leaders">برترین‌های فصل</button>
  </nav>
 </div></header>
 <main class="wrap" id="app" aria-live="polite"></main>
 <footer>منبع: ESPN · وقت شرق آمریکا</footer>
+</div>
 
 <script>
 const $=s=>document.querySelector(s),P=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
 const FA={ATL:'آتلانتا هاوکس',BOS:'بوستون سلتیکس',BKN:'بروکلین نتس',CHA:'شارلوت هورنتس',CHI:'شیکاگو بولز',CLE:'کلیولند کاوالیرز',DAL:'دالاس ماوریکس',DEN:'دنور ناگتس',DET:'دیترویت پیستونز',GS:'گلدن‌استیت واریرز',GSW:'گلدن‌استیت واریرز',HOU:'هیوستون راکتس',IND:'ایندیانا پیسرز',LAC:'لس‌آنجلس کلیپرز',LAL:'لس‌آنجلس لیکرز',MEM:'ممفیس گریزلیز',MIA:'میامی هیت',MIL:'میلواکی باکس',MIN:'مینه‌سوتا تیمبرولوز',NO:'نیواورلینز پلیکنز',NOP:'نیواورلینز پلیکنز',NY:'نیویورک نیکس',NYK:'نیویورک نیکس',OKC:'اوکلاهوما سیتی تاندر',ORL:'اورلاندو مجیک',PHI:'فیلادلفیا سونی‌سرز',PHX:'فینیکس سانز',POR:'پورتلند ترایل‌بلیزرز',SAC:'ساکرامنتو کینگز',SA:'سن‌آنتونیو اسپرز',SAS:'سن‌آنتونیو اسپرز',TOR:'تورنتو رپترز',UTAH:'یوتا جاز',UTA:'یوتا جاز',WSH:'واشنگتن ویزاردز',WAS:'واشنگتن ویزاردز'};
 const fa=t=>FA[t.abbreviation]||t.displayName||t.abbreviation;
-const API='https://site.api.espn.com/apis/site/v2/sports/basketball/nba',STAND='https://site.api.espn.com/apis/v2/sports/basketball/nba/standings';
+const API='https://site.api.espn.com/apis/site/v2/sports/basketball/nba',STAND='https://site.api.espn.com/apis/v2/sports/basketball/nba/standings',LEAD='https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&limit=20&sort=offensive.avgPoints%3Adesc';
 let cache=new Map();
-const hop=async u=>{for(const f of [x=>x,x=>'https://corsproxy.io/?url='+encodeURIComponent(x),x=>'https://api.allorigins.win/raw?url='+encodeURIComponent(x)]){const c=new AbortController(),t=setTimeout(()=>c.abort(),7000);try{const r=await fetch(f(u),{signal:c.signal});if(r.ok)return await r.json()}catch(e){}finally{clearTimeout(t)}}throw new Error('network')};
+const via=[x=>'https://corsproxy.io/?url='+encodeURIComponent(x),x=>'https://api.allorigins.win/raw?url='+encodeURIComponent(x),x=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(x),x=>'https://thingproxy.freeboard.io/fetch/'+x];
+let direct=true;
+const one=async url=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),7000);try{const r=await fetch(url,{signal:c.signal});if(!r.ok)throw 0;return await r.json()}finally{clearTimeout(t)}};
+const hop=async u=>{if(direct)try{return await one(u)}catch(e){direct=false}
+ try{return await Promise.any(via.map(f=>one(f(u))))}catch(e){throw new Error('network')}};
 const get=u=>{if(!cache.has(u))cache.set(u,hop(u).catch(e=>{cache.delete(u);throw e}));return cache.get(u)};
 const etToday=()=>new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
 const add=(iso,n)=>{const d=new Date(iso+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
 const fmt=iso=>new Date(iso+'T12:00:00Z').toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
-let cur=etToday(),tab='day',all=false,sk='pts',G=[],S=null,tok=0;
-try{tab=localStorage.getItem('tab')||'day';document.documentElement.dataset.t=localStorage.getItem('th')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.t='light'}
+let cur=etToday(),tab='day',all=false,sk='pts',G=[],S=null,LD=null,tok=0;
+try{tab=localStorage.getItem('tab')||'day';document.documentElement.dataset.t=localStorage.getItem('th')||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark')}catch(e){document.documentElement.dataset.t='dark'}
 
-function players(g){const out=[];(g.box?.players||[]).forEach((grp,gi)=>{const st=grp.statistics?.[0];if(!st)return;const L=st.labels||[],iP=L.indexOf('PTS'),iR=L.indexOf('REB'),iA=L.indexOf('AST');
- const tm=g.teams.find(x=>x.t.id==grp.team?.id)||g.teams[gi],op=g.teams.find(x=>x!==tm);
- (st.athletes||[]).forEach(a=>{if(!a.stats||!a.stats.length||iP<0)return;out.push({n:a.athlete.displayName,tm,op,pts:+a.stats[iP]||0,reb:+a.stats[iR]||0,ast:+a.stats[iA]||0})})});return out}
+const badge=p=>{const c=[p.pts,p.reb,p.ast].filter(x=>x>=10).length;return c>=3?'تریپل‌دابل':p.pts>=40?'۴۰+ امتیاز':c==2?'دابل‌دابل':''};
+function players(g){const out=[];g.bx=[];(g.box?.players||[]).forEach((grp,gi)=>{const st=grp.statistics?.[0];if(!st)return;const L=st.labels||[],iP=L.indexOf('PTS'),iR=L.indexOf('REB'),iA=L.indexOf('AST');
+ const tm=g.teams.find(x=>x.t.id==grp.team?.id)||g.teams[gi],op=g.teams.find(x=>x!==tm),rows=[];
+ (st.athletes||[]).forEach(a=>{if(!a.stats||!a.stats.length||iP<0)return;const p={n:a.athlete.displayName,tm,op,pts:+a.stats[iP]||0,reb:+a.stats[iR]||0,ast:+a.stats[iA]||0};out.push(p);rows.push({n:p.n,s:a.stats})});
+ g.bx.push({tm,L,rows})});return out}
 async function loadDay(iso){const sb=await get(`${API}/scoreboard?dates=${iso.replace(/-/g,'')}&limit=50`);
  const gs=(sb.events||[]).map(e=>{const c=e.competitions[0],ty=e.status.type;
-  return{id:e.id,state:ty.state,detail:ty.shortDetail,date:e.date,teams:[...c.competitors].sort((a,b)=>a.homeAway=='away'?-1:1).map(k=>({t:k.team,score:+k.score||0,win:!!k.winner,rec:k.records?.[0]?.summary}))}});
+  return{id:e.id,state:ty.state,detail:ty.shortDetail,date:e.date,teams:[...c.competitors].sort((a,b)=>a.homeAway=='away'?-1:1).map(k=>({t:k.team,score:+k.score||0,win:!!k.winner}))}});
  await Promise.allSettled(gs.filter(g=>g.state!='pre').map(async g=>{g.box=(await get(`${API}/summary?event=${g.id}`)).boxscore}));
  gs.forEach(g=>g.pl=players(g));return gs}
 async function loadStand(){const d=await get(STAND);return(d.children||[]).map(c=>({name:c.name,rows:(c.standings?.entries||[]).map(e=>{const o={};(e.stats||[]).forEach(s=>o[s.name]=s);
- return{t:e.team,w:o.wins?.value||0,l:o.losses?.value||0,pct:o.winPercent?.value??0,gb:o.gamesBehind?.displayValue,df:(o.pointDifferential||o.differential)?.displayValue,st:o.streak?.displayValue,seed:o.playoffSeed?.value||99}}).sort((a,b)=>a.seed-b.seed||b.pct-a.pct)}))}
+ return{t:e.team,w:o.wins?.value||0,l:o.losses?.value||0,pct:o.winPercent?.value??0,st:o.streak?.displayValue,seed:o.playoffSeed?.value||99}}).sort((a,b)=>a.seed-b.seed||b.pct-a.pct)}))}
+async function loadLead(){const d=await get(LEAD);const val=(a,n)=>{for(const c of a.categories||[]){const i=(c.names||[]).indexOf(n);if(i>=0){const v=(c.values||c.totals||[])[i];return typeof v=='number'?v:parseFloat(v)}}return NaN};
+ return(d.athletes||[]).map(a=>({n:a.athlete.displayName,tm:a.athlete.teamShortName||a.athlete.teamName||'',p:val(a,'avgPoints'),r:val(a,'avgRebounds'),a:val(a,'avgAssists'),g:val(a,'gamesPlayed')})).filter(x=>!isNaN(x.p))}
 
 const logo=t=>`<span class="lg">${t.logo?`<img src="${t.logo}" alt="" loading="lazy" onerror="this.remove()">`:''}</span>`;
 const ts=(g,t,n)=>{const v=g.box?.teams?.find(x=>x.team?.id==t.t.id)?.statistics?.find(s=>s.name==n)?.displayValue;return v?P(v):'–'};
 const status=g=>g.state=='in'?`<span class="live">${P(g.detail)}</span>`:g.state=='pre'?'شروع: '+P(new Date(g.date).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})):'پایان بازی';
 const empty=m=>`<div class="raise empty">${m}</div>`;
+const tg=p=>badge(p)?`<span class="tag">${badge(p)}</span>`:'';
 
-function listHTML(L){const R=all?L:L.slice(0,10),mx=L[0][sk]||1;return R.map((p,i)=>`<div class="pl"><span class="rk">${P(i+1)}</span><div><b><bdi>${p.n}</bdi></b> <span class="mu">${fa(p.tm.t)}</span><div class="track inset"><div class="fill" style="width:${p[sk]/mx*100}%"></div></div></div><span class="sc">${P(p[sk])}</span></div>`).join('')+(L.length>10?`<div style="text-align:center;padding:10px"><button class="btn" id="more">${all?'نمایش کمتر':'نمایش بیشتر'}</button></div>`:'')}
+function listHTML(L){const R=all?L:L.slice(0,5),mx=L[0][sk]||1;return R.map((p,i)=>`<div class="pl"><span class="rk">${P(i+1)}</span><div><b><bdi>${p.n}</bdi></b>${tg(p)} <span class="mu">${fa(p.tm.t)}</span><div class="track"><div class="fill" style="width:${p[sk]/mx*100}%"></div></div></div><span class="sc">${P(p[sk])}</span></div>`).join('')+(L.length>5?`<div style="text-align:center;padding:10px"><button class="btn" id="more">${all?'نمایش کمتر':'نمایش بیشتر'}</button></div>`:'')}
 function vDay(){const L=G.flatMap(g=>g.pl);if(!L.length)return empty(G.length?'بازی‌های این روز هنوز شروع نشده‌اند. از زبانه «بازی‌ها» ساعت شروع را ببینید.':'در این تاریخ بازی‌ای برگزار نمی‌شود. روز دیگری را انتخاب کنید.');
  L.sort((a,b)=>b[sk]-a[sk]||b.pts-a.pts);const top=[...L].sort((a,b)=>b.pts-a.pts)[0],live=G.some(g=>g.state=='in');
- return`<div class="raise hero"><span class="ball big"><i></i></span><div><small class="mu">${live?'بیشترین امتیاز تا این لحظه':'بیشترین امتیاز روز'}</small><h3><bdi>${top.n}</bdi></h3><div class="mu">${fa(top.tm.t)} مقابل ${fa(top.op.t)} · ${P(top.reb)} ریباند · ${P(top.ast)} پاس گل</div></div><div><div class="big-n">${P(top.pts)}</div><div class="mu" style="text-align:center">امتیاز</div></div></div>
- <div class="seg" style="margin-top:32px">${[['pts','امتیاز'],['reb','ریباند'],['ast','پاس گل']].map(([k,l])=>`<button class="btn ${k==sk?'on':''}" data-sk="${k}">${l}</button>`).join('')}</div><div class="raise list" id="lst">${listHTML(L)}</div>`}
+ return`<div class="raise hero"><span class="ball"><i></i></span><div><small class="mu">${live?'بیشترین امتیاز تا این لحظه':'بیشترین امتیاز روز'}</small><h3><bdi>${top.n}</bdi>${tg(top)}</h3><div class="mu">${fa(top.tm.t)} مقابل ${fa(top.op.t)} · ${P(top.reb)} ریباند · ${P(top.ast)} پاس گل</div></div><div><div class="big-n">${P(top.pts)}</div><div class="mu" style="text-align:center">امتیاز</div></div></div>
+ <div class="seg">${[['pts','امتیاز'],['reb','ریباند'],['ast','پاس گل']].map(([k,l])=>`<button class="btn ${k==sk?'on':''}" data-sk="${k}">${l}</button>`).join('')}</div><div class="raise list">${listHTML(L)}</div>`}
 function vGames(){if(!G.length)return empty('در این تاریخ بازی‌ای برگزار نمی‌شود. روز دیگری را انتخاب کنید.');
- const R=[['شوت میدانی','fieldGoalPct','٪'],['ریباند','totalRebounds',''],['پاس گل','assists','']];
- return`<div class="grid">${G.map(g=>{const [a,b]=g.teams,m=Math.max(a.score,b.score),best=[...g.pl].sort((x,y)=>y.pts-x.pts)[0],v=(t,k,u)=>{const x=ts(g,t,k);return x=='–'?x:x+u};
- return`<article class="raise game" data-tilt><div class="st">${status(g)}</div>${g.teams.map(t=>`<div class="row ${g.state=='post'&&t.score==m?'w':''}"><span>${logo(t.t)}${fa(t.t)}</span><b>${g.state=='pre'?'–':P(t.score)}</b></div>`).join('')}
- ${g.box?`<table class="inset mini"><tr><th></th><th>${a.t.abbreviation}</th><th>${b.t.abbreviation}</th></tr>${R.map(([l,k,u])=>`<tr><td>${l}</td><td>${v(a,k,u)}</td><td>${v(b,k,u)}</td></tr>`).join('')}</table>${best?`<div class="best">برترین: <b style="color:var(--tx)"><bdi>${best.n}</bdi></b> با ${P(best.pts)} امتیاز</div>`:''}`:''}</article>`}).join('')}</div>`}
-function vTable(){return`<div class="two">${S.map(c=>`<div class="raise scroll"><h3 style="margin-bottom:8px">${c.name.includes('East')?'کنفرانس شرق':c.name.includes('West')?'کنفرانس غرب':c.name}</h3><table><tr><th>#</th><th>تیم</th><th>برد</th><th>باخت</th><th>روند</th></tr>${c.rows.map((e,i)=>`<tr><td>${P(i+1)}</td><td>${logo(e.t)}${fa(e.t)}</td><td>${P(e.w)}</td><td>${P(e.l)}</td><td dir="ltr" style="color:var(--${String(e.st).startsWith('W')?'ok':'no'})">${e.st?P(e.st):'–'}</td></tr>`).join('')}</table></div>`).join('')}</div>`}
+ return`<div class="grid">${G.map(g=>{const m=Math.max(...g.teams.map(t=>t.score)),best=[...g.pl].sort((x,y)=>y.pts-x.pts)[0];
+ return`<article class="raise game" data-g="${g.id}" ${g.box?'tabindex="0" role="button" aria-label="باکس‌اسکور"':''}><div class="st">${status(g)}</div>${g.teams.map(t=>`<div class="row ${g.state=='post'&&t.score==m?'w':''}"><span>${logo(t.t)}${fa(t.t)}</span><b>${g.state=='pre'?'–':P(t.score)}</b></div>`).join('')}${best?`<div class="best">برترین: <bdi>${best.n}</bdi> · ${P(best.pts)}</div>`:''}</article>`}).join('')}</div>`}
+function vTable(){return`<div class="two">${S.map(c=>`<div class="raise scroll"><h3 style="margin-bottom:8px">${c.name.includes('East')?'کنفرانس شرق':c.name.includes('West')?'کنفرانس غرب':c.name}</h3><table class="tb"><tr><th>#</th><th>تیم</th><th>برد</th><th>باخت</th><th>روند</th></tr>${c.rows.map((e,i)=>`<tr class="${i==5?'cut':i==9?'cut2':''}"><td>${P(i+1)}</td><td>${logo(e.t)}${fa(e.t)}</td><td>${P(e.w)}</td><td>${P(e.l)}</td><td dir="ltr" style="color:var(--${String(e.st).startsWith('W')?'ok':'no'})">${e.st?P(e.st):'–'}</td></tr>`).join('')}</table></div>`).join('')}</div><p class="mu" style="margin:16px 4px;font-size:.85rem">خط نارنجی: شش تیم اول مستقیم به پلی‌آف می‌روند. خط‌چین: رتبه‌های ۷ تا ۱۰ پلی‌این بازی می‌کنند.</p>`}
+function vLead(){if(!LD?.length)return empty('آمار فصل در دسترس نیست.');const R=all?LD:LD.slice(0,8),mx=LD[0].p||1;
+ return`<div class="seg" style="margin-top:0"><span class="mu">میانگین امتیاز در هر بازی</span></div><div class="raise list">${R.map((p,i)=>`<div class="pl"><span class="rk">${P(i+1)}</span><div><b><bdi>${p.n}</bdi></b> <span class="mu"><bdi>${p.tm}</bdi></span><div class="track"><div class="fill" style="width:${p.p/mx*100}%"></div></div></div><span class="sc">${P(p.p.toFixed(1))}</span></div>`).join('')}${LD.length>8?`<div style="text-align:center;padding:10px"><button class="btn" id="more">${all?'نمایش کمتر':'نمایش بیشتر'}</button></div>`:''}</div>`}
+const cmp=g=>{if(!g.box?.teams?.length)return'';const[a,b]=g.teams,R=[['شوت میدانی','fieldGoalPct','٪'],['سه‌امتیازی','threePointFieldGoalPct','٪'],['ریباند','totalRebounds',''],['پاس گل','assists',''],['توپ‌گمکردن','turnovers','']],v=(t,k,u)=>{const x=ts(g,t,k);return x=='–'?x:x+u};
+ return`<table class="inset mini"><tr><th></th><th>${a.t.abbreviation}</th><th>${b.t.abbreviation}</th></tr>${R.map(([l,k,u])=>`<tr><td>${l}</td><td>${v(a,k,u)}</td><td>${v(b,k,u)}</td></tr>`).join('')}</table>`};
+function openBox(id){const g=G.find(x=>x.id==id);if(!g||!g.bx?.length)return;const C=['MIN','PTS','REB','AST','FG','3PT'];
+ const o=document.createElement('div');o.className='ov';
+ o.innerHTML=`<div class="md" role="dialog" aria-modal="true"><div style="text-align:left"><button class="btn" id="cl" aria-label="بستن">✕</button></div>${cmp(g)}${g.bx.map(b=>{const ix=C.map(c=>b.L.indexOf(c));return`<h3><span>${logo(b.tm.t)}${fa(b.tm.t)}</span><span class="mu">${P(b.tm.score)}</span></h3><div class="scroll"><table class="bxt"><tr><th>بازیکن</th>${C.map((c,i)=>ix[i]<0?'':`<th>${c}</th>`).join('')}</tr>${b.rows.map(r=>`<tr><td><bdi>${r.n}</bdi></td>${ix.map(i=>i<0?'':`<td>${P(r.s[i]??'–')}</td>`).join('')}</tr>`).join('')}</table></div>`}).join('')}</div>`;
+ const close=()=>{o.remove();removeEventListener('keydown',esc)},esc=e=>e.key=='Escape'&&close();
+ o.onclick=e=>{if(e.target==o)close()};document.body.appendChild(o);o.querySelector('#cl').onclick=close;o.querySelector('#cl').focus();addEventListener('keydown',esc)}
 
-function draw(){const iso=cur;$('#dt').value=iso;$('#th').textContent=document.documentElement.dataset.t=='dark'?'☀️':'🌙';
+function draw(){$('#dt').value=cur;$('#th').textContent=document.documentElement.dataset.t=='dark'?'☀️':'🌙';
  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab==tab));
- $('#app').innerHTML=(tab=='table'?'':`<div class="date">${fmt(cur)}</div>`)+(tab=='table'?(S?.length?vTable():empty('جدول در دسترس نیست.')):tab=='games'?vGames():vDay());
+ const d=tab=='day'||tab=='games';
+ $('#app').innerHTML=(d?`<div class="date">${fmt(cur)}</div>`:'<div style="height:18px"></div>')+(tab=='table'?(S?.length?vTable():empty('جدول در دسترس نیست.')):tab=='leaders'?vLead():tab=='games'?vGames():vDay());
  document.querySelectorAll('[data-sk]').forEach(b=>b.onclick=()=>{sk=b.dataset.sk;draw()});
  const mb=$('#more');if(mb)mb.onclick=()=>{all=!all;draw()};
- tilt()}
-function tilt(){if(!matchMedia('(hover:hover)').matches||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
- document.querySelectorAll('[data-tilt]').forEach(el=>{const k=el.classList.contains('scroll')||el.classList.contains('hero')?2:7;el.onpointermove=e=>{const b=el.getBoundingClientRect(),x=(e.clientX-b.left)/b.width-.5,y=(e.clientY-b.top)/b.height-.5;el.style.transform=`perspective(900px) rotateX(${-y*k}deg) rotateY(${x*k}deg) translateZ(6px)`};el.onpointerleave=()=>el.style.transform=''})}
+ document.querySelectorAll('[data-g]').forEach(el=>{el.onclick=()=>openBox(el.dataset.g);el.onkeydown=e=>{if(e.key=='Enter')openBox(el.dataset.g)}})}
 async function load(){const my=++tok;$('#app').innerHTML=empty('در حال دریافت آمار…');
- try{if(tab=='table')S=await loadStand();else G=await loadDay(cur);if(my==tok)draw()}
+ try{if(tab=='table')S=await loadStand();else if(tab=='leaders')LD=await loadLead();else G=await loadDay(cur);if(my==tok)draw()}
  catch(e){console.error(e);if(my==tok)$('#app').innerHTML=`<div class="raise empty">دریافت داده ناموفق بود (${e.message}). اگر ESPN یا VPN/فیلتر روی اینترنت شما محدودیت دارد، آن را بررسی کنید و دوباره تلاش کنید.<br><br><button class="btn" id="rt">تلاش دوباره</button></div>`,$('#rt').onclick=load}}
 const go=d=>{cur=d;load()};
 $('#nx').onclick=()=>go(add(cur,1));$('#pv').onclick=()=>go(add(cur,-1));$('#td').onclick=()=>go(etToday());
 $('#dt').onchange=e=>e.target.value&&go(e.target.value);
 $('#th').onclick=()=>{const n=document.documentElement.dataset.t=='dark'?'light':'dark';document.documentElement.dataset.t=n;try{localStorage.setItem('th',n)}catch(e){}draw()};
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;try{localStorage.setItem('tab',tab)}catch(e){}load()});
-addEventListener('keydown',e=>{if(e.target.tagName=='INPUT')return;if(e.key=='ArrowLeft')go(add(cur,1));if(e.key=='ArrowRight')go(add(cur,-1))});
-setInterval(()=>{if(document.hidden||tab=='table'||!G.some(g=>g.state=='in'))return;cache=new Map();load()},60000);
-(async()=>{$('#app').innerHTML=empty('در حال دریافت آمار…');/* اگر امروز هنوز بازی تمام‌شده‌ای نیست، تا ۴ روز قبل را بررسی کن */
+addEventListener('keydown',e=>{if(e.target.tagName=='INPUT'||document.querySelector('.ov'))return;if(e.key=='ArrowLeft')go(add(cur,1));if(e.key=='ArrowRight')go(add(cur,-1))});
+setInterval(()=>{if(document.hidden||tab!='day'&&tab!='games'||!G.some(g=>g.state=='in'))return;cache=new Map();load()},60000);
+(async()=>{$('#app').innerHTML=empty('در حال دریافت آمار…');
  try{for(let i=0;i<4;i++){const g=await loadDay(cur);if(g.some(x=>x.state!='pre'))break;cur=add(cur,-1)}}catch(e){}
  load()})();
 </script>
+<!--
+اختیاری: اگر دریافت مستقیم از ESPN برایتان بسته بود (بدون VPN)، این دو فایل را کنار index.html در ریپو بگذارید.
+سایت خودش به آن‌ها وابسته نیست و بدون‌شان هم کار می‌کند.
+
+===== فایل ۱: fetch-data.mjs (در ریشه‌ی ریپو) =====
+// دریافت داده از ESPN روی سرور گیت‌هاب و ذخیره در پوشه data (برای کار کردن سایت بدون VPN)
+import fs from 'node:fs/promises';
+const API = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba';
+const STAND = 'https://site.api.espn.com/apis/v2/sports/basketball/nba/standings';
+const LEAD = 'https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&limit=20&sort=offensive.avgPoints%3Adesc';
+const get = async u => { const r = await fetch(u, { headers: { 'user-agent': 'Mozilla/5.0' } }); if (!r.ok) throw new Error(r.status + ' ' + u); return r.json(); };
+const et = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+const add = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+await fs.mkdir('data', { recursive: true });
+const keep = new Set(['standings.json', 'leaders.json']); let failed = false;
+for (let n = -4; n <= 1; n++) {
+  const ymd = add(et, n).replace(/-/g, ''); keep.add(`day-${ymd}.json`);
+  try {
+    const sb = await get(`${API}/scoreboard?dates=${ymd}&limit=50`);
+    await fs.writeFile(`data/day-${ymd}.json`, JSON.stringify(sb));
+    for (const e of sb.events || []) {
+      const f = `event-${e.id}.json`; keep.add(f); const state = e.status.type.state;
+      if (state === 'pre') continue;
+      if (state === 'post') { try { if (JSON.parse(await fs.readFile('data/' + f, 'utf8')).final) continue; } catch {} }
+      try { const s = await get(`${API}/summary?event=${e.id}`); await fs.writeFile('data/' + f, JSON.stringify({ boxscore: s.boxscore, final: state === 'post' })); }
+      catch (err) { failed = true; console.warn(err.message); }
+    }
+  } catch (err) { failed = true; console.warn(err.message); }
+}
+for (const [f, u] of [['standings.json', STAND], ['leaders.json', LEAD]]) {
+  try { await fs.writeFile('data/' + f, JSON.stringify(await get(u))); } catch (err) { console.warn(err.message); }
+}
+if (!failed) for (const f of await fs.readdir('data')) if (!keep.has(f)) await fs.unlink('data/' + f);
+
+===== فایل ۲: .github/workflows/update-data.yml =====
+name: update-data
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node fetch-data.mjs
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || (git commit -m "update data" && git push)
+
+-->
 </body>
 </html>
