@@ -2,7 +2,10 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0f1f">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="بسکت‌آمار"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>بسکت‌آمار NBA | امتیازآورهای روز، نتایج و جدول</title>
 <meta name="description" content="آمار روزانه NBA: برترین امتیازآورها، باکس‌اسکور بازی‌ها، رده‌بندی و برترین‌های فصل.">
 <meta property="og:title" content="بسکت‌آمار NBA"><meta property="og:description" content="آمار روزانه NBA">
@@ -54,7 +57,7 @@ input[type=date]{padding:7px 12px;border-radius:14px;color-scheme:dark}
 .row{display:flex;justify-content:space-between;align-items:center;padding:4px}
 .row b{font-size:1.4rem}.row.w{font-weight:800;color:var(--ac)}
 .lg{width:40px;height:40px;border-radius:50%;display:inline-grid;place-items:center;margin-left:10px;vertical-align:middle;background:rgba(255,255,255,.92);flex:none}
-.lg img{width:28px;height:28px;object-fit:contain}
+.lg img{width:28px;height:28px;object-fit:contain}.ab{display:none}.lg.nb{background:linear-gradient(135deg,var(--c),#0008);color:#fff;font-size:.62rem;font-weight:800}.lg.nb .ab{display:block}
 .st{font-size:.8rem;margin-bottom:4px;color:var(--mu)}
 .live{color:var(--no);font-weight:800}.live::before{content:"● "}
 table{width:100%;border-collapse:collapse;font-size:.92rem}
@@ -89,6 +92,12 @@ nav.tabs{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);width:mi
 nav.tabs .btn{flex:1;padding:9px 4px;border-color:transparent;background:none;box-shadow:none;font-size:.9rem}
 nav.tabs .btn.on{background:linear-gradient(135deg,#ff8a3d,#ff5e62)}
 @media(max-width:640px){.wrap{padding:10px 14px}.logo{font-size:1.2rem}.top{gap:8px}#th{order:2;padding:5px 12px}.ctrl{order:3;width:100%;justify-content:space-between;gap:6px}.ctrl input{flex:1;min-width:0;text-align:center;padding:5px 8px}.ctrl .btn{padding:5px 14px}#td{display:none}.date{font-size:.85rem;margin:2px 4px 12px}.hero{padding:18px;gap:10px}.hero .ball{display:none}.big-n{font-size:3.2rem}.seg{margin:18px 0 10px}.list,.scroll{padding-right:12px;padding-left:12px}.grid,.two{gap:14px}.game{padding:12px 14px}}
+[hidden]{display:none!important}
+[data-team]{cursor:pointer}[data-team]:hover{color:var(--ac)}
+.rost{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 16px}.rost div{padding:4px 0}
+body{padding-top:env(safe-area-inset-top)}
+nav.tabs{bottom:calc(14px + env(safe-area-inset-bottom))}
+@media(max-width:640px){#ins{order:2;padding:5px 12px}}
 </style>
 </head>
 <body>
@@ -103,6 +112,7 @@ nav.tabs .btn.on{background:linear-gradient(135deg,#ff8a3d,#ff5e62)}
    <button class="btn" id="pv" aria-label="روز قبل">‹</button>
    <button class="btn" id="td">امروز</button>
   </div>
+  <button class="btn" id="ins" hidden>📲 نصب</button>
   <button class="btn" id="th" aria-label="تغییر تم">🌙</button>
  </div>
 </div></header>
@@ -119,7 +129,9 @@ nav.tabs .btn.on{background:linear-gradient(135deg,#ff8a3d,#ff5e62)}
 const $=s=>document.querySelector(s),P=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
 const FA={ATL:'آتلانتا هاوکس',BOS:'بوستون سلتیکس',BKN:'بروکلین نتس',CHA:'شارلوت هورنتس',CHI:'شیکاگو بولز',CLE:'کلیولند کاوالیرز',DAL:'دالاس ماوریکس',DEN:'دنور ناگتس',DET:'دیترویت پیستونز',GS:'گلدن‌استیت واریرز',GSW:'گلدن‌استیت واریرز',HOU:'هیوستون راکتس',IND:'ایندیانا پیسرز',LAC:'لس‌آنجلس کلیپرز',LAL:'لس‌آنجلس لیکرز',MEM:'ممفیس گریزلیز',MIA:'میامی هیت',MIL:'میلواکی باکس',MIN:'مینه‌سوتا تیمبرولوز',NO:'نیواورلینز پلیکنز',NOP:'نیواورلینز پلیکنز',NY:'نیویورک نیکس',NYK:'نیویورک نیکس',OKC:'اوکلاهوما سیتی تاندر',ORL:'اورلاندو مجیک',PHI:'فیلادلفیا سونی‌سرز',PHX:'فینیکس سانز',POR:'پورتلند ترایل‌بلیزرز',SAC:'ساکرامنتو کینگز',SA:'سن‌آنتونیو اسپرز',SAS:'سن‌آنتونیو اسپرز',TOR:'تورنتو رپترز',UTAH:'یوتا جاز',UTA:'یوتا جاز',WSH:'واشنگتن ویزاردز',WAS:'واشنگتن ویزاردز'};
 const fa=t=>FA[t.abbreviation]||t.displayName||t.abbreviation;
-const API='https://site.api.espn.com/apis/site/v2/sports/basketball/nba',STAND='https://site.api.espn.com/apis/v2/sports/basketball/nba/standings',LEAD='https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&limit=20&sort=offensive.avgPoints%3Adesc';
+const API='https://site.api.espn.com/apis/site/v2/sports/basketball/nba',STAND='https://site.api.espn.com/apis/v2/sports/basketball/nba/standings';
+const LK={p:['امتیاز','offensive.avgPoints','avgPoints'],r:['ریباند','general.avgRebounds','avgRebounds'],a:['پاس گل','offensive.avgAssists','avgAssists'],s:['سرقت','defensive.avgSteals','avgSteals'],b:['بلاک','defensive.avgBlocks','avgBlocks']};
+const leadURL=k=>'https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&limit=20&sort='+encodeURIComponent(LK[k][1]+':desc');
 let cache=new Map();
 const via=[x=>'https://corsproxy.io/?url='+encodeURIComponent(x),x=>'https://api.allorigins.win/raw?url='+encodeURIComponent(x),x=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(x),x=>'https://thingproxy.freeboard.io/fetch/'+x];
 let direct=true;
@@ -130,7 +142,7 @@ const get=u=>{if(!cache.has(u))cache.set(u,hop(u).catch(e=>{cache.delete(u);thro
 const etToday=()=>new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
 const add=(iso,n)=>{const d=new Date(iso+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
 const fmt=iso=>new Date(iso+'T12:00:00Z').toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
-let cur=etToday(),tab='day',all=false,sk='pts',G=[],S=null,LD=null,tok=0;
+let cur=etToday(),tab='day',all=false,sk='pts',G=[],S=null,LD=null,tok=0,lk='p',first=true;
 try{tab=localStorage.getItem('tab')||'day';document.documentElement.dataset.t=localStorage.getItem('th')||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark')}catch(e){document.documentElement.dataset.t='dark'}
 
 const badge=p=>{const c=[p.pts,p.reb,p.ast].filter(x=>x>=10).length;return c>=3?'تریپل‌دابل':p.pts>=40?'۴۰+ امتیاز':c==2?'دابل‌دابل':''};
@@ -145,10 +157,12 @@ async function loadDay(iso){const sb=await get(`${API}/scoreboard?dates=${iso.re
  gs.forEach(g=>g.pl=players(g));return gs}
 async function loadStand(){const d=await get(STAND);return(d.children||[]).map(c=>({name:c.name,rows:(c.standings?.entries||[]).map(e=>{const o={};(e.stats||[]).forEach(s=>o[s.name]=s);
  return{t:e.team,w:o.wins?.value||0,l:o.losses?.value||0,pct:o.winPercent?.value??0,st:o.streak?.displayValue,seed:o.playoffSeed?.value||99}}).sort((a,b)=>a.seed-b.seed||b.pct-a.pct)}))}
-async function loadLead(){const d=await get(LEAD);const val=(a,n)=>{for(const c of a.categories||[]){const i=(c.names||[]).indexOf(n);if(i>=0){const v=(c.values||c.totals||[])[i];return typeof v=='number'?v:parseFloat(v)}}return NaN};
- return(d.athletes||[]).map(a=>({n:a.athlete.displayName,tm:a.athlete.teamShortName||a.athlete.teamName||'',p:val(a,'avgPoints'),r:val(a,'avgRebounds'),a:val(a,'avgAssists'),g:val(a,'gamesPlayed')})).filter(x=>!isNaN(x.p))}
-
-const logo=t=>`<span class="lg">${t.logo?`<img src="${t.logo}" alt="" loading="lazy" onerror="this.remove()">`:''}</span>`;
+async function loadLead(k){const d=await get(leadURL(k)),nm=LK[k][2];const val=(a,n)=>{for(const c of a.categories||[]){const i=(c.names||[]).indexOf(n);if(i>=0){const v=(c.values||c.totals||[])[i];return typeof v=='number'?v:parseFloat(v)}}return NaN};
+ return(d.athletes||[]).map(a=>({n:a.athlete.displayName,tm:a.athlete.teamShortName||a.athlete.teamName||'',v:val(a,nm),g:val(a,'gamesPlayed')})).filter(x=>!isNaN(x.v)).sort((x,y)=>y.v-x.v)}
+const COL=Object.fromEntries("ATL:E03A3E,BOS:007A33,BKN:444444,CHA:1D1160,CHI:CE1141,CLE:860038,DAL:00538C,DEN:1D428A,DET:C8102E,GS:1D428A,GSW:1D428A,HOU:CE1141,IND:002D62,LAC:C8102E,LAL:552583,MEM:5D76A9,MIA:98002E,MIL:00471B,MIN:236192,NO:0C2340,NOP:0C2340,NY:006BB6,NYK:006BB6,OKC:007AC1,ORL:0077C0,PHI:006BB6,PHX:E56020,POR:E03A3E,SAC:5A2D81,SA:666666,SAS:666666,TOR:CE1141,UTAH:4E008E,UTA:4E008E,WSH:002B5C,WAS:002B5C".split(',').map(x=>x.split(':')));
+function lf(i){const s=+i.dataset.s||0;i.dataset.s=s+1;if(s==0&&i.dataset.u)i.src='https://images.weserv.nl/?url='+encodeURIComponent(i.dataset.u.replace(/^https?:\/\//,''));else{i.parentNode.classList.add('nb');i.remove()}}
+const logo=t=>{const u=t.logo||t.logos?.[0]?.href||`https://a.espncdn.com/i/teamlogos/nba/500/${String(t.abbreviation).toLowerCase()}.png`,c=COL[t.abbreviation]||t.color||'667799';
+ return`<span class="lg" style="--c:#${String(c).replace('#','')}"><b class="ab">${t.abbreviation}</b><img src="${u}" data-u="${u}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="lf(this)"></span>`};
 const ts=(g,t,n)=>{const v=g.box?.teams?.find(x=>x.team?.id==t.t.id)?.statistics?.find(s=>s.name==n)?.displayValue;return v?P(v):'–'};
 const status=g=>g.state=='in'?`<span class="live">${P(g.detail)}</span>`:g.state=='pre'?'شروع: '+P(new Date(g.date).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})):'پایان بازی';
 const empty=m=>`<div class="raise empty">${m}</div>`;
@@ -162,37 +176,62 @@ function vDay(){const L=G.flatMap(g=>g.pl);if(!L.length)return empty(G.length?'�
 function vGames(){if(!G.length)return empty('در این تاریخ بازی‌ای برگزار نمی‌شود. روز دیگری را انتخاب کنید.');
  return`<div class="grid">${G.map(g=>{const m=Math.max(...g.teams.map(t=>t.score)),best=[...g.pl].sort((x,y)=>y.pts-x.pts)[0];
  return`<article class="raise game" data-g="${g.id}" ${g.box?'tabindex="0" role="button" aria-label="باکس‌اسکور"':''}><div class="st">${status(g)}</div>${g.teams.map(t=>`<div class="row ${g.state=='post'&&t.score==m?'w':''}"><span>${logo(t.t)}${fa(t.t)}</span><b>${g.state=='pre'?'–':P(t.score)}</b></div>`).join('')}${best?`<div class="best">برترین: <bdi>${best.n}</bdi> · ${P(best.pts)}</div>`:''}</article>`}).join('')}</div>`}
-function vTable(){return`<div class="two">${S.map(c=>`<div class="raise scroll"><h3 style="margin-bottom:8px">${c.name.includes('East')?'کنفرانس شرق':c.name.includes('West')?'کنفرانس غرب':c.name}</h3><table class="tb"><tr><th>#</th><th>تیم</th><th>برد</th><th>باخت</th><th>روند</th></tr>${c.rows.map((e,i)=>`<tr class="${i==5?'cut':i==9?'cut2':''}"><td>${P(i+1)}</td><td>${logo(e.t)}${fa(e.t)}</td><td>${P(e.w)}</td><td>${P(e.l)}</td><td dir="ltr" style="color:var(--${String(e.st).startsWith('W')?'ok':'no'})">${e.st?P(e.st):'–'}</td></tr>`).join('')}</table></div>`).join('')}</div><p class="mu" style="margin:16px 4px;font-size:.85rem">خط نارنجی: شش تیم اول مستقیم به پلی‌آف می‌روند. خط‌چین: رتبه‌های ۷ تا ۱۰ پلی‌این بازی می‌کنند.</p>`}
-function vLead(){if(!LD?.length)return empty('آمار فصل در دسترس نیست.');const R=all?LD:LD.slice(0,8),mx=LD[0].p||1;
- return`<div class="seg" style="margin-top:0"><span class="mu">میانگین امتیاز در هر بازی</span></div><div class="raise list">${R.map((p,i)=>`<div class="pl"><span class="rk">${P(i+1)}</span><div><b><bdi>${p.n}</bdi></b> <span class="mu"><bdi>${p.tm}</bdi></span><div class="track"><div class="fill" style="width:${p.p/mx*100}%"></div></div></div><span class="sc">${P(p.p.toFixed(1))}</span></div>`).join('')}${LD.length>8?`<div style="text-align:center;padding:10px"><button class="btn" id="more">${all?'نمایش کمتر':'نمایش بیشتر'}</button></div>`:''}</div>`}
+function vTable(){return`<div class="two">${S.map(c=>`<div class="raise scroll"><h3 style="margin-bottom:8px">${c.name.includes('East')?'کنفرانس شرق':c.name.includes('West')?'کنفرانس غرب':c.name}</h3><table class="tb"><tr><th>#</th><th>تیم</th><th>برد</th><th>باخت</th><th>روند</th></tr>${c.rows.map((e,i)=>`<tr class="${i==5?'cut':i==9?'cut2':''}"><td>${P(i+1)}</td><td data-team="${e.t.id}" data-ab="${e.t.abbreviation}">${logo(e.t)}${fa(e.t)}</td><td>${P(e.w)}</td><td>${P(e.l)}</td><td dir="ltr" style="color:var(--${String(e.st).startsWith('W')?'ok':'no'})">${e.st?P(e.st):'–'}</td></tr>`).join('')}</table></div>`).join('')}</div><p class="mu" style="margin:16px 4px;font-size:.85rem">خط نارنجی: شش تیم اول مستقیم به پلی‌آف می‌روند. خط‌چین: رتبه‌های ۷ تا ۱۰ پلی‌این بازی می‌کنند.</p>`}
+function vLead(){const seg=`<div class="seg" style="margin-top:0">${Object.entries(LK).map(([k,v])=>`<button class="btn ${k==lk?'on':''}" data-lk="${k}">${v[0]}</button>`).join('')}</div>`;
+ if(!LD?.length)return seg+empty('آمار فصل در دسترس نیست.');const R=all?LD:LD.slice(0,8),mx=LD[0].v||1;
+ return seg+`<div class="raise list">${R.map((p,i)=>`<div class="pl"><span class="rk">${P(i+1)}</span><div><b><bdi>${p.n}</bdi></b> <span class="mu"><bdi>${p.tm}</bdi></span><div class="track"><div class="fill" style="width:${p.v/mx*100}%"></div></div></div><span class="sc">${P(p.v.toFixed(1))}</span></div>`).join('')}${LD.length>8?`<div style="text-align:center;padding:10px"><button class="btn" id="more">${all?'نمایش کمتر':'نمایش بیشتر'}</button></div>`:''}</div>`}
 const cmp=g=>{if(!g.box?.teams?.length)return'';const[a,b]=g.teams,R=[['شوت میدانی','fieldGoalPct','٪'],['سه‌امتیازی','threePointFieldGoalPct','٪'],['ریباند','totalRebounds',''],['پاس گل','assists',''],['توپ‌گمکردن','turnovers','']],v=(t,k,u)=>{const x=ts(g,t,k);return x=='–'?x:x+u};
  return`<table class="inset mini"><tr><th></th><th>${a.t.abbreviation}</th><th>${b.t.abbreviation}</th></tr>${R.map(([l,k,u])=>`<tr><td>${l}</td><td>${v(a,k,u)}</td><td>${v(b,k,u)}</td></tr>`).join('')}</table>`};
+const modal=html=>{const o=document.createElement('div');o.className='ov';o.innerHTML=`<div class="md" role="dialog" aria-modal="true"><div style="text-align:left"><button class="btn" id="cl" aria-label="بستن">✕</button></div>${html}</div>`;const close=()=>{o.remove();removeEventListener('keydown',esc)},esc=e=>e.key=='Escape'&&close();o.onclick=e=>{if(e.target==o)close()};document.body.appendChild(o);o.querySelector('#cl').onclick=close;o.querySelector('#cl').focus();addEventListener('keydown',esc);return o};
 function openBox(id){const g=G.find(x=>x.id==id);if(!g||!g.bx?.length)return;const C=['MIN','PTS','REB','AST','FG','3PT'];
- const o=document.createElement('div');o.className='ov';
- o.innerHTML=`<div class="md" role="dialog" aria-modal="true"><div style="text-align:left"><button class="btn" id="cl" aria-label="بستن">✕</button></div>${cmp(g)}${g.bx.map(b=>{const ix=C.map(c=>b.L.indexOf(c));return`<h3><span>${logo(b.tm.t)}${fa(b.tm.t)}</span><span class="mu">${P(b.tm.score)}</span></h3><div class="scroll"><table class="bxt"><tr><th>بازیکن</th>${C.map((c,i)=>ix[i]<0?'':`<th>${c}</th>`).join('')}</tr>${b.rows.map(r=>`<tr><td><bdi>${r.n}</bdi></td>${ix.map(i=>i<0?'':`<td>${P(r.s[i]??'–')}</td>`).join('')}</tr>`).join('')}</table></div>`}).join('')}</div>`;
- const close=()=>{o.remove();removeEventListener('keydown',esc)},esc=e=>e.key=='Escape'&&close();
- o.onclick=e=>{if(e.target==o)close()};document.body.appendChild(o);o.querySelector('#cl').onclick=close;o.querySelector('#cl').focus();addEventListener('keydown',esc)}
-
+ modal(cmp(g)+g.bx.map(b=>{const ix=C.map(c=>b.L.indexOf(c));return`<h3 data-team="${b.tm.t.id}" data-ab="${b.tm.t.abbreviation}"><span>${logo(b.tm.t)}${fa(b.tm.t)} ›</span><span class="mu">${P(b.tm.score)}</span></h3><div class="scroll"><table class="bxt"><tr><th>بازیکن</th>${C.map((c,i)=>ix[i]<0?'':`<th>${c}</th>`).join('')}</tr>${b.rows.map(r=>`<tr><td><bdi>${r.n}</bdi></td>${ix.map(i=>i<0?'':`<td>${P(r.s[i]??'–')}</td>`).join('')}</tr>`).join('')}</table></div>`}).join(''))}
+const sc=x=>+(x?.displayValue??x?.value??x)||0;
+async function openTeam(id,ab){const t={id,abbreviation:ab},o=modal(`<h3 style="justify-content:flex-start;gap:10px">${logo(t)}<span>${fa(t)}</span></h3><div class="empty">در حال دریافت…</div>`);
+ const [sch,ros]=await Promise.allSettled([get(`${API}/teams/${id}/schedule`),get(`${API}/teams/${id}/roster`)]);
+ let gm='',pl='';
+ if(sch.status=='fulfilled'){const L=(sch.value.events||[]).filter(e=>e.competitions?.[0]?.status?.type?.completed).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(-5).reverse();
+  gm=L.map(e=>{const cs=e.competitions[0].competitors,me=cs.find(x=>x.team?.id==id)||cs[0],op=cs.find(x=>x!==me),w=me.winner??sc(me.score)>sc(op.score);
+   return`<div class="row"><span><b class="tag" style="background:var(--${w?'ok':'no'})">${w?'برد':'باخت'}</b> مقابل ${fa(op.team)}</span><b dir="ltr">${P(sc(me.score))}–${P(sc(op.score))}</b></div>`}).join('')}
+ if(ros.status=='fulfilled'){pl=(ros.value.athletes||[]).flatMap(a=>a.items||[a]).map(a=>`<div><span class="mu">${P(a.jersey||'–')}</span> <bdi>${a.displayName||a.fullName}</bdi> <small class="mu">${a.position?.abbreviation||''}</small></div>`).join('')}
+ o.querySelector('.md').insertAdjacentHTML('beforeend','');o.querySelector('.empty')?.remove();
+ o.querySelector('.md').insertAdjacentHTML('beforeend',`<p class="mu" style="margin:12px 0 4px">آخرین بازی‌ها</p>${gm||'<div class="empty">در دسترس نیست.</div>'}<p class="mu" style="margin:16px 0 4px">بازیکنان</p>${pl?`<div class="rost">${pl}</div>`:'<div class="empty">در دسترس نیست.</div>'}`)}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-team]');if(t)openTeam(t.dataset.team,t.dataset.ab)});
 function draw(){$('#dt').value=cur;$('#th').textContent=document.documentElement.dataset.t=='dark'?'☀️':'🌙';
  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab==tab));
  const d=tab=='day'||tab=='games';
  $('#app').innerHTML=(d?`<div class="date">${fmt(cur)}</div>`:'<div style="height:18px"></div>')+(tab=='table'?(S?.length?vTable():empty('جدول در دسترس نیست.')):tab=='leaders'?vLead():tab=='games'?vGames():vDay());
  document.querySelectorAll('[data-sk]').forEach(b=>b.onclick=()=>{sk=b.dataset.sk;draw()});
  const mb=$('#more');if(mb)mb.onclick=()=>{all=!all;draw()};
+ document.querySelectorAll('[data-lk]').forEach(b=>b.onclick=()=>{lk=b.dataset.lk;all=false;load()});
  document.querySelectorAll('[data-g]').forEach(el=>{el.onclick=()=>openBox(el.dataset.g);el.onkeydown=e=>{if(e.key=='Enter')openBox(el.dataset.g)}})}
-async function load(){const my=++tok;$('#app').innerHTML=empty('در حال دریافت آمار…');
- try{if(tab=='table')S=await loadStand();else if(tab=='leaders')LD=await loadLead();else G=await loadDay(cur);if(my==tok)draw()}
+async function load(){const my=++tok;setH();$('#app').innerHTML=empty('در حال دریافت آمار…');
+ try{if(tab=='table')S=await loadStand();else if(tab=='leaders')LD=await loadLead(lk);else G=await loadDay(cur);if(my==tok)draw()}
  catch(e){console.error(e);if(my==tok)$('#app').innerHTML=`<div class="raise empty">دریافت داده ناموفق بود (${e.message}). اگر ESPN یا VPN/فیلتر روی اینترنت شما محدودیت دارد، آن را بررسی کنید و دوباره تلاش کنید.<br><br><button class="btn" id="rt">تلاش دوباره</button></div>`,$('#rt').onclick=load}}
 const go=d=>{cur=d;load()};
+const parseH=()=>{const p=new URLSearchParams(location.hash.slice(1)),t=p.get('tab'),d=p.get('d'),k=p.get('k');if(['day','games','table','leaders'].includes(t))tab=t;if(/^\d{4}-\d{2}-\d{2}$/.test(d||''))cur=d;if(k&&LK[k])lk=k;return /^\d{4}-\d{2}-\d{2}$/.test(d||'')};
+const setH=()=>{const x=`tab=${tab}&d=${cur}${tab=='leaders'?'&k='+lk:''}`;if(location.hash.slice(1)!==x)try{history[first?'replaceState':'pushState'](null,'','#'+x)}catch(e){}first=false};
+addEventListener('popstate',()=>{parseH();load()});
 $('#nx').onclick=()=>go(add(cur,1));$('#pv').onclick=()=>go(add(cur,-1));$('#td').onclick=()=>go(etToday());
 $('#dt').onchange=e=>e.target.value&&go(e.target.value);
 $('#th').onclick=()=>{const n=document.documentElement.dataset.t=='dark'?'light':'dark';document.documentElement.dataset.t=n;try{localStorage.setItem('th',n)}catch(e){}draw()};
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;try{localStorage.setItem('tab',tab)}catch(e){}load()});
 addEventListener('keydown',e=>{if(e.target.tagName=='INPUT'||document.querySelector('.ov'))return;if(e.key=='ArrowLeft')go(add(cur,1));if(e.key=='ArrowRight')go(add(cur,-1))});
 setInterval(()=>{if(document.hidden||tab!='day'&&tab!='games'||!G.some(g=>g.state=='in'))return;cache=new Map();load()},60000);
-(async()=>{$('#app').innerHTML=empty('در حال دریافت آمار…');
- try{for(let i=0;i<4;i++){const g=await loadDay(cur);if(g.some(x=>x.state!='pre'))break;cur=add(cur,-1)}}catch(e){}
+(async()=>{$('#app').innerHTML=empty('در حال دریافت آمار…');const hadD=parseH();
+ try{if(!hadD&&(tab=='day'||tab=='games'))for(let i=0;i<4;i++){const g=await loadDay(cur);if(g.some(x=>x.state!='pre'))break;cur=add(cur,-1)}}catch(e){}
  load()})();
+
+/* نصب روی گوشی (PWA): آیکن و مانیفست بدون فایل اضافه ساخته می‌شوند */
+(()=>{const mk=n=>{const c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,n,n);g.addColorStop(0,'#2a2470');g.addColorStop(1,'#0a0f1f');x.fillStyle=g;x.fillRect(0,0,n,n);const r=n*.34,m=n/2,b=x.createRadialGradient(m-r*.3,m-r*.3,r*.1,m,m,r);b.addColorStop(0,'#ffb070');b.addColorStop(.6,'#ff7a18');b.addColorStop(1,'#b44a10');
+ x.fillStyle=b;x.beginPath();x.arc(m,m,r,0,7);x.fill();x.save();x.clip();x.strokeStyle='rgba(40,18,6,.7)';x.lineWidth=n*.018;x.beginPath();x.moveTo(m,m-r);x.lineTo(m,m+r);x.moveTo(m-r,m);x.lineTo(m+r,m);x.stroke();x.beginPath();x.arc(m-r*1.15,m,r*.8,-1,1);x.stroke();x.beginPath();x.arc(m+r*1.15,m,r*.8,Math.PI-1,Math.PI+1);x.stroke();x.restore();return c.toDataURL('image/png')};
+ try{const a=document.createElement('link');a.rel='apple-touch-icon';a.href=mk(180);document.head.appendChild(a);
+  if(/^https?:/.test(location.protocol)){const mf={name:'بسکت‌آمار NBA',short_name:'بسکت‌آمار',lang:'fa',dir:'rtl',start_url:location.href.split('#')[0],scope:new URL('./',location.href).href,display:'standalone',background_color:'#0a0f1f',theme_color:'#0a0f1f',icons:[{src:mk(192),sizes:'192x192',type:'image/png',purpose:'any'},{src:mk(512),sizes:'512x512',type:'image/png',purpose:'any'}]};
+   const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:'application/manifest+json'}));document.head.appendChild(l)}}catch(e){}
+ const st=matchMedia('(display-mode: standalone)').matches||navigator.standalone,ios=/iphone|ipad|ipod/i.test(navigator.userAgent);let dp;
+ if(st)return;if(ios)$('#ins').hidden=false;
+ addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;$('#ins').hidden=false});addEventListener('appinstalled',()=>$('#ins').hidden=true);
+ $('#ins').onclick=async()=>{if(dp){dp.prompt();await dp.userChoice;dp=null;$('#ins').hidden=true;return}
+  const o=document.createElement('div');o.className='ov';o.innerHTML='<div class="md" style="max-width:360px;text-align:center"><p>در سافاری روی دکمه‌ی اشتراک‌گذاری (مربع با فلش بالا) بزن و «Add to Home Screen» را انتخاب کن.</p><br><button class="btn" id="ok">باشه</button></div>';o.onclick=e=>{if(e.target==o||e.target.id=='ok')o.remove()};document.body.appendChild(o)}})();
 </script>
 <!--
 اختیاری: اگر دریافت مستقیم از ESPN برایتان بسته بود (بدون VPN)، این دو فایل را کنار index.html در ریپو بگذارید.
